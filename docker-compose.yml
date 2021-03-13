@@ -17,6 +17,7 @@ services:
       - "8081:8081" #- мапим порты
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro" #- передаем докер сокет для получение инфы о другмх контейнерах
+  
   backend:
     image: "node:14.15.0-stretch"
     restart: unless-stopped
@@ -29,6 +30,7 @@ services:
       - ./api:/usr/src/api
     working_dir: /usr/src/api
     command: npm start
+
   whoami:
     image: "traefik/whoami"
     labels:
@@ -36,6 +38,7 @@ services:
       - "traefik.http.routers.whoami.rule=Path(`/test`)"
       - "traefik.http.routers.whoami.entrypoints=web"
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+
   mysql:
     image: mysql:8
     volumes:
@@ -44,6 +47,7 @@ services:
     environment:
       MYSQL_DATABASE: recipe
       MYSQL_ROOT_PASSWORD: password
+
   myadmin:
     image: phpmyadmin/phpmyadmin
     environment:
@@ -57,6 +61,7 @@ services:
       - "traefik.http.routers.myadmin.entrypoints=myadmin" #- название роутера
     links:
       - mysql
+
   build:
     build: ./
     links:
